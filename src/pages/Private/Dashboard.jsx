@@ -27,7 +27,10 @@ export const Dashboard = () =>{
             <BooksTab />
           </div>
         </div>
-        <BasicBars/>
+        <div className="flex flex-row w-full py-4">
+          <div className="w-1/2 pr-2"></div>
+          <div className="w-1/2 "><BasicBars /></div>
+        </div>
         </>
     );
 }
