@@ -4,6 +4,7 @@ import { StatsCards } from "./StatsCards";
 import { AlarmClock, BookCopy, Clock9, FileStack, Users } from "lucide-react";
 import { UsersTab } from "@/components/UsersTab";
 import { BooksTab } from "@/components/BooksTab";
+import BasicBars from "@/components/BarCharts";
 
 export const Dashboard = () =>{
     return(
@@ -25,8 +26,8 @@ export const Dashboard = () =>{
           <div className="w-180">
             <BooksTab />
           </div>
-   
         </div>
+        <BasicBars/>
         </>
     );
 }
