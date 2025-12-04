@@ -7,8 +7,10 @@ import reservationRoutes from './reservationRoutes.js';
 import categoryRoutes from './categoryRoutes.js';
 import editionRoutes from './EditionRoutes.js';
 import amendeRoutes from './amendeRoutes.js';
+import authRoutes from './authRoutes.js';
 
 const setupRoutes = (app) => {
+  app.use('/api/auth', authRoutes);
   app.use('/api/users', userRoutes);
   app.use('/api/books', bookRoutes);
   app.use('/api/authors', authorRoutes);
@@ -18,7 +20,7 @@ const setupRoutes = (app) => {
   app.use('/api/categories', categoryRoutes);
   app.use('/api/editions', editionRoutes);
   app.use('/api/amendes', amendeRoutes);
- // app.use('/api/book-authors', bookAuthorRoutes);
+  // app.use('/api/book-authors', bookAuthorRoutes);
 };
 
 export default setupRoutes;
