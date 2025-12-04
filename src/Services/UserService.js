@@ -1,10 +1,9 @@
-import { User } from '../models/associations.js';
+import userRepository from '../Repository/UserRepository.js';
 
 class UserService {
   async create(userData) {
     try {
-      const user = await User.create(userData);
-      return user;
+      return await userRepository.create(userData);
     } catch (error) {
       throw new Error(`Error creating user: ${error.message}`);
     }
