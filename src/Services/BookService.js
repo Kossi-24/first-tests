@@ -1,10 +1,9 @@
-import { Book } from '../models/associations.js';
+import bookRepository from '../Repository/BookRepository.js';
 
 class BookService {
   async create(bookData) {
     try {
-      const book = await Book.create(bookData);
-      return book;
+      return await bookRepository.create(bookData);
     } catch (error) {
       throw new Error(`Error creating book: ${error.message}`);
     }

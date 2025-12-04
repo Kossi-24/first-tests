@@ -11,8 +11,7 @@ class UserService {
 
   async findAll() {
     try {
-      const users = await User.findAll();
-      return users;
+      return await userRepository.findAll();
     } catch (error) {
       throw new Error(`Error fetching users: ${error.message}`);
     }
@@ -20,8 +19,7 @@ class UserService {
 
   async findById(id) {
     try {
-      const user = await User.findByPk(id);
-      return user;
+      return await userRepository.findById(id);
     } catch (error) {
       throw new Error(`Error fetching user: ${error.message}`);
     }
@@ -29,12 +27,7 @@ class UserService {
 
   async update(id, userData) {
     try {
-      const [updated] = await User.update(userData, { where: { id } });
-      if (updated) {
-        const updatedUser = await User.findByPk(id);
-        return updatedUser;
-      }
-      throw new Error('User not found');
+      return await userRepository.update(id, userData);
     } catch (error) {
       throw new Error(`Error updating user: ${error.message}`);
     }
@@ -42,7 +35,7 @@ class UserService {
 
   async delete(id) {
     try {
-      const deleted = await User.destroy({ where: { id } });
+      const deleted = await userRepository.delete(id);
       if (deleted) {
         return { message: 'User deleted successfully' };
       }
