@@ -12,6 +12,11 @@ export const register = async (req, res) => {
   }
 };
 
+export const me = (req, res) => {
+  return res.json({ user: req.user });
+};
+
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -32,6 +37,16 @@ export const updateCurrentUser = async (req, res) => {
     res.json(rest);
   }
   catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+export const getCurrentUser = async (req, res) => {
+  try {
+    // req.user is set by authMiddleware
+    const user = req.user;
+    res.json({ user });
+  } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
