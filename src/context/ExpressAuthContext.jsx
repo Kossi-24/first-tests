@@ -1,86 +1,80 @@
+import { createContext, useState, useEffect, useContext } from "react";
 import api from "@/services/api";
-import {
-    createContext,
-    useState,
-    useEffect,
-    useContext
-} from "react";
 
-import {
-    loginUser as loginService,
-    logoutUser
-} from "@/services/userService";
+export const AuthContext = createContext();
 
-export const ExpressAuthContext = createContext();
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [loading, setLoading] = useState(true);
 
-export const ExpressAuthProvider = ({ children }) => {
+  // Charger le profil au démarrage si un token existe
+  useEffect(() => {
+    if (token) {
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      fetchUser();
+    } else {
+      setLoading(false);
+    }
+  }, [token]);
 
-    const [user, setUser] = useState(() => {
-        try {
-            const storedUser = localStorage.getItem("user");
-            return storedUser ? JSON.parse(storedUser) : null;
-        } catch (error) {
-            console.error("Erreur lors de la récupération du user :", error);
-            return null;
-        }
-    });
+  const fetchUser = async () => {
+    try {
+      const res = await api.get("/auth/me");
+      setUser(res.data.user);
+    } catch (err) {
+      console.error("Auth error:", err);
+      logout();
+    } finally {
+      setLoading(false);
+    }
+  };
+  const register = async (userData) => {
+    await api.post("/auth/register", userData);
+  };
 
-    const login = async (email, password) => {
-        const data = await loginService(email, password);
+  const login = async (email, password) => {
+    const res = await api.post("/auth/login", { email, password });
 
-        if (!data || !data.user) {
-            throw new Error("Login failed");
-        }
+    const token = res.data.token;
+    setToken(token);
+    localStorage.setItem("token", token);
 
-        // Met à jour l'état local
-        setUser(data.user);
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    await fetchUser();
+  };
 
-        // Stockage local
-        try {
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
-        } catch (err) {
-            console.warn("LocalStorage error:", err);
-        }
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem("token");
+    delete api.defaults.headers.common["Authorization"];
+  };
 
-        return data;
-    };
-    const logout = () => {
-        setUser(null);
-        logoutUser(); // retire le token
-        localStorage.removeItem("user");
-    };
-    useEffect(() => {
-        const checkAuth = async () => {
-            const token = localStorage.getItem("token");
-            if (!token) return;
-
-            try {
-                const res = await api.get("/auth/me");
-                setUser(res.data.user);
-                localStorage.setItem("user", JSON.stringify(res.data.user));
-            } catch (err) {
-                console.log("Token invalide :", err);
-                logout();
-            }
-        };
-
-        checkAuth();
-    }, []);
-
-    const value = { user, login, logout };
-
-    return (
-        <ExpressAuthContext.Provider value={value}>
-            {children}
-        </ExpressAuthContext.Provider>
-    );
-};
-
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        loading,
+        login,
+        logout,
+        isAuthenticated: !!user,
+        isAdmin: user?.role === "ADMIN",
+        isLibrarian: user?.role === "LIBRARIAN",
+        isMember: user?.role === "MEMBER",
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
+// context personnalisé pour l'authentification avec Express et JWT
 export function useExpressAuth() {
-    const context = useContext(ExpressAuthContext);
+  const context = useContext(AuthContext);
     if (!context) {
-        throw new Error("useExpressAuth must be used within an ExpressAuthProvider");
+        throw new Error("useAuth must be used within an AuthProvider");
     }
     return context;
 }
+

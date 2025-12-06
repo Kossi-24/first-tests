@@ -11,13 +11,18 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import BookIcon from './Book.avif'
-import { useAuth } from "@/context/AuthContext"
+//import { useAuth } from "@/context/AuthContext"
+import { useExpressAuth } from "@/context/ExpressAuthContext"
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
+import { registerUser } from "@/services/userService"
 
 export function SignUp() {
+  // Utilisation du contexte d'authentification de firebase
+  //const { signUp } = useAuth(); // Hook personnalisé au lieu de useContext
 
-  const { signUp } = useAuth(); // Hook personnalisé au lieu de useContext
+  // Utilisation du contexte d'authentification avec Express et JWT
+  const { register } = useExpressAuth();
   const navigate = useNavigate();
   const [validation, setValidation] = useState("");
 
@@ -32,11 +37,12 @@ export function SignUp() {
   const handleForm = async (e) => {
     e.preventDefault();
 
-    const email = inputs.current[0]?.value?.trim();
-    const password = inputs.current[1]?.value?.trim();
+    const nom = inputs.current[0]?.value?.trim();
+    const email = inputs.current[1]?.value?.trim();
+    const password = inputs.current[2]?.value?.trim();
 
     // Validation des champs
-    if (!email || !password) {
+    if (!nom || !email || !password) {
       setValidation("Veuillez remplir tous les champs");
       return;
     }
@@ -47,14 +53,15 @@ export function SignUp() {
       return;
     }
 
+    console.log("Nom:", nom);
     console.log("Email:", email);
     console.log("Password:", password);
 
     try {
-      const cred = await signUp(email, password);
+      const cred = await registerUser(nom, email, password);
       setValidation("");
       console.log("Inscription réussie:", cred);
-      navigate("/private/dashboard");
+      navigate("/");
     } catch (error) {
       console.error("Erreur d'inscription:", error);
       
@@ -119,6 +126,16 @@ export function SignUp() {
           onSubmit={handleForm}
         >
           <div className="flex flex-col gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="nom">Nom</Label>
+              <Input
+                ref={addInputs}
+                id="nom"
+                type="text"
+                placeholder="Votre nom"
+                required
+              />
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input

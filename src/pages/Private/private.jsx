@@ -1,16 +1,21 @@
 import React from 'react'
-import { UserContext } from '@/context/AuthContext'
+import { AuthContext } from '@/context/ExpressAuthContext'
 import { Outlet, Navigate } from 'react-router-dom'
 import Sidebar, { SidebarItem } from '@/components/Sidebar'
 import { LayoutDashboard, Book, User, Package, BarChart, Bell, Mail, Settings, LifeBuoy } from 'lucide-react'
 import { useContext } from 'react'
 import { ModeToggle } from '@/components/mode-toggle'
 export default function Private() {
-    const { currentUser } = useContext(UserContext)
-    console.log("PRIVATE", currentUser)
+    // Récupération de l'utilisateur courant depuis le contexte de express
+    const { user, loading } = useContext(AuthContext)
+
+    console.log("PRIVATE", user, loading)
 
     // Protection de la route - redirection si non connecté
-    if (!currentUser) {
+    if (loading) {
+        return <div>Loading...</div>
+    }
+    if (!user) {
         return <Navigate to="/" />
     }
 

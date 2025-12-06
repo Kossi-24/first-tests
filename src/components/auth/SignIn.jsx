@@ -14,10 +14,11 @@ import BookIcon from './Book.avif'
 import { useAuth } from "@/context/AuthContext"
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-
+import { useExpressAuth } from "@/context/ExpressAuthContext"
 export function SignIn() {
 
-  const { signIn } = useAuth();
+  //const { signIn } = useAuth();
+  const {login} = useExpressAuth();
   const navigate = useNavigate();
   const [validation, setValidation] = useState("");
 
@@ -45,7 +46,7 @@ export function SignIn() {
     console.log("Password:", password);
 
     try {
-      const cred = await signIn(email, password);
+      const cred = await login(email, password);
       setValidation("");
       console.log("Connexion réussie:", cred);
       navigate("/private/dashboard");
