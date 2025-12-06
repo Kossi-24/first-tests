@@ -11,6 +11,7 @@ import authRoutes from './authRoutes.js';
 
 const setupRoutes = (app) => {
   app.use('/api/auth', authRoutes);
+  app.use('/api/auth/me', authRoutes);
   app.use('/api/users', userRoutes);
   app.use('/api/books', bookRoutes);
   app.use('/api/authors', authorRoutes);

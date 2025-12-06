@@ -22,3 +22,21 @@ export const login = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+export const updateCurrentUser = async (req, res) => {
+  try {
+    const userId = req.user.id; // assuming user ID is available in req.user
+    const userData = req.body;
+    const updatedUser = await AuthService.updateCurrentUser(userId, userData);
+    const { password: _, ...rest } = updatedUser;
+    res.json(rest);
+  }
+  catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+export const logoutUser = (req, res) => {
+  // Since JWT is stateless, logout can be handled on the client side by deleting the token.
+  res.json({ message: 'Logged out successfully' });
+};
