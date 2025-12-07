@@ -28,12 +28,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { auth } from "@/services/firebase-config"
 import { signOut } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
+import { useExpressAuth } from "@/context/ExpressAuthContext"
+
 
 export function DropdownMenuDialog() {
-
-  const logout = async() => {
+  const {logout} = useExpressAuth();
+  const logoutCurrentUser = async() => {
     try{
-      await signOut(auth)
+      await logout(auth)
       navigate("/")
     } catch{
       console.log("Erreur de déconnexion:")
@@ -144,7 +146,7 @@ export function DropdownMenuDialog() {
           <Button
             className="gap-2 dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700"
             variant="outline"
-            onClick={logout}
+            onClick={logoutCurrentUser}
           >
             <LogOut className="h-4 w-4" /> Deconnecter
         </Button>

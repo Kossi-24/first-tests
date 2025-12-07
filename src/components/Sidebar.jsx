@@ -2,16 +2,19 @@ import { createContext, useContext, useState } from "react";
 import { ChevronFirst, MoreVertical, ChevronLast } from "lucide-react";
 import {useNavigate, useLocation} from "react-router-dom"
 import { DropdownMenuDialog } from "@/components/Dialog"
+import { AuthContext } from "@/context/ExpressAuthContext";
+import React from "react";
 const SidebarContext = createContext({ expanded: true });
 
 
 export default function Sidebar({ children }) {
+  const { user, loading } = React.useContext(AuthContext);
     const [expanded, setExpanded] = useState(true)
     return (
         <aside className={`h-screen ${expanded ? "w-64" : "w-16"} transition-all`}>
                 <nav className="h-full flex flex-col bg-white border-r shadow-sm dark:bg-slate-900 dark:border-slate-800">
                     <div className="p-4 pb-2 flex justify-between items-center">
-                        <img src="https://img.logoipsum.com/243.svg" alt=""  className="w-32" />
+                       
                         <button
                             onClick={() => setExpanded((curr) => !curr)}
                             className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-slate-800 dark:hover:bg-slate-700"
@@ -26,7 +29,7 @@ export default function Sidebar({ children }) {
                 
                 <div className="border-t flex p-3 dark:border-slate-800">
           <img
-            src="https://ui-avatars.com/api/?name=Noryah+Betsalel"
+            src={`https://ui-avatars.com/api/?name=${user?.nom}`}
             alt=""
             className="w-10 h-10 rounded-md"
           />
@@ -37,8 +40,8 @@ export default function Sidebar({ children }) {
           `}
           >
             <div className="leading-4 text-gray-900 dark:text-gray-100">
-              <h4 className="font-semibold">Noryah Betsalel</h4>
-              <span className="text-xs text-gray-600 dark:text-gray-300">NoryahAi@gmail.com</span>
+              <h4 className="font-semibold">{user?.nom}</h4>
+              <span className="text-xs text-gray-600 dark:text-gray-300">{user?.email}</span>
             </div>
             <DropdownMenuDialog />
           </div>

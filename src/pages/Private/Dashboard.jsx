@@ -5,13 +5,17 @@ import { AlarmClock, BookCopy, Clock9, FileStack, Users } from "lucide-react";
 import { UsersTab } from "@/components/UsersTab";
 import { BooksTab } from "@/components/BooksTab";
 import BasicBars from "@/components/BarCharts";
-
+import { AuthContext } from "@/context/ExpressAuthContext";
 export const Dashboard = () =>{
+  // Récupération de l'utilisateur courant depuis le contexte de express
+  const { user, loading } = React.useContext(AuthContext);
+
+  console.log("DASHBOARD", user, loading)
     return(
       <><div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
         
-        <h1 className="text-xl font-bold">Hello, <span className="text-sky-500">Noryah</span>!</h1><p>Jan 12,2025 |Thursday, 12:00 PM</p>
+        <h1 className="text-xl font-bold">Hello, <span className="text-sky-500">{user?.nom}</span>!</h1><p>Jan 12,2025 |Thursday, 12:00 PM</p>
         </div>
       </div><div className="flex flex-wrap gap-4 py-4">
           <StatsCards title="Utilisateurs totals" amount="10400" icon={<Users size={20} />} />

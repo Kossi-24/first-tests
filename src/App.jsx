@@ -11,6 +11,10 @@ import SettingsPage from './pages/Private/Settings'
 import Help from './pages/Private/Help'
 import { SignIn } from './components/auth/SignIn'
 import Private from './pages/Private/private'
+import UserView from './pages/Private/UserView'
+import BorrowedBooks from './pages/Private/BorrowedBooks'
+import CurrentUserProfile from './pages/Private/CurrentUserProfile'
+import { LiberianBoard } from './pages/Private/LiberianBoard'
 import { SignUp } from './components/auth/SignUp'
 
 function App() {
@@ -32,6 +36,10 @@ function App() {
         <Route path="messages" element={<Messages />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="help" element={<Help />} />
+        <Route path="user-view" element={<UserView />} />
+        <Route path="my-borrows" element={<BorrowedBooks />} />
+        <Route path="current-profile" element={<CurrentUserProfile />} />
+        <Route path="librarian-dashboard" element={<LiberianBoard />} />
       </Route>
       
       {/* Route 404 */}

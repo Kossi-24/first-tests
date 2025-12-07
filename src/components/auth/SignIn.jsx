@@ -46,10 +46,20 @@ export function SignIn() {
     console.log("Password:", password);
 
     try {
-      const cred = await login(email, password);
+      const user = await login(email, password);
       setValidation("");
-      console.log("Connexion réussie:", cred);
-      navigate("/private/dashboard");
+      console.log("Connexion réussie:", user);
+
+      // Redirection basée sur le rôle
+      if (user.role === 'ADMIN') {
+        navigate("/private/dashboard");
+      } else if (user.role === 'LIBRARIAN') {
+        navigate("/private/books");
+      } else if (user.role === 'MEMBER') {
+        navigate("/private/user-view");
+      } else {
+        navigate("/private/librarian-dashboard"); // fallback
+      }
     } catch (error) {
       console.error("Erreur de connexion:", error);
       
