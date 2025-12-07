@@ -20,11 +20,14 @@ export const authenticate = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('authenticate: decoded.sub =', decoded.sub);
 
     // Récupérer l'utilisateur complet depuis la base
     const user = await User.findByPk(decoded.sub);
+    console.log('authenticate: user found =', user ? user.id : 'null');
 
     if (!user) {
+      console.log('authenticate: user not found, returning 404');
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -33,6 +36,7 @@ export const authenticate = async (req, res, next) => {
     next();
 
   } catch (err) {
+    console.log('authenticate: error =', err.message);
     return res.status(401).json({ message: "Invalid token", error: err.message });
   }
 };

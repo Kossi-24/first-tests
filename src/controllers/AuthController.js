@@ -13,7 +13,9 @@ export const register = async (req, res) => {
 };
 
 export const me = (req, res) => {
-  return res.json({ user: req.user });
+  const userData = req.user.toJSON();
+  const { password, ...userWithoutPassword } = userData;
+  return res.json({ user: userWithoutPassword });
 };
 
 
