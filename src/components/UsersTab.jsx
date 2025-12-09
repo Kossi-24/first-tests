@@ -14,6 +14,7 @@ import {adminGetUsers, adminDeleteUser} from "@/services/userService"
 import {useState} from 'react'
 import { Badge } from "./ui/badge"
 import { BadgeCheckIcon } from "lucide-react"
+import AddUserModal from "@/components/AddUserFom"
 
 export function UsersTab() {
   const [userData, setUserData] = useState([])
@@ -42,13 +43,16 @@ export function UsersTab() {
             Users List
           </h2>
         </div>
-        <Button
-          variant="outline"
-          className="rounded-sm border-slate-200 bg-white text-sm font-medium text-gray-700 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-800"
-          
-        >
-          +Add New User
-        </Button>
+       <AddUserModal
+          trigger={
+            <Button
+              variant="outline"
+              className="rounded-sm border-slate-200 bg-white text-sm font-medium text-gray-700 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-800"
+            >
+              + Add New User
+            </Button>
+          }/>
+
       </div>
 
       <div className="mt-5 overflow-hidden">
