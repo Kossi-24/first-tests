@@ -7,9 +7,12 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { registerUser } from '@/services/userService'
+import { useExpressAuth } from "@/context/ExpressAuthContext";
+
 
 export default function AddUserModal({ trigger }) {
   const [open, setOpen] = useState(false)
+  const { user } = useExpressAuth();
 
   const form = useForm({
     defaultValues: {
@@ -22,12 +25,14 @@ export default function AddUserModal({ trigger }) {
 
   const onSubmit = async (data) => {
     try {
-      const res = await registerUser(
-        data.nom,
-        data.email,
-        data.password,
-        data.role
-      )
+      const res = await registerUser({
+      nom: data.nom,
+      email: data.email,
+      password: data.password,
+      role: data.role,
+      createdBy: user?.id   // <= ICI LE PLUS IMPORTANT
+    });
+
 
       console.log("Utilisateur créé :", res)
 
@@ -54,8 +59,6 @@ export default function AddUserModal({ trigger }) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-
-            {/* NOM */}
             <FormField
               control={form.control}
               name="nom"
@@ -70,8 +73,6 @@ export default function AddUserModal({ trigger }) {
                 </FormItem>
               )}
             />
-
-            {/* EMAIL */}
             <FormField
               control={form.control}
               name="email"

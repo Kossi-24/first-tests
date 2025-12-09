@@ -1,15 +1,13 @@
 import api from './api';
 
 // REGISTER (ADMIN peut définir le rôle)
-export const registerUser = async (nom, email, password, role = "MEMBER") => {
-    try {
-        const response = await api.post('/auth/register', {
-            nom, email, password, role
-        });
-        return response.data;
-    } catch (error) {
-        throw new Error(error.response?.data?.message || "Erreur d'inscription");
-    }
+export const registerUser = async (payload) => {
+  try {
+    const response = await api.post('/auth/register', payload);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Erreur d'inscription");
+  }
 };
 
 // LOGIN
