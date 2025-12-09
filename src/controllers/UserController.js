@@ -28,28 +28,36 @@ export class UserController {
   }
 
   // CREATE USER
-  async createUser(req, res) {
-    try {
-      const requester = req.user; // who makes the request
-      const userData = req.body;
+// CREATE USER
+async createUser(req, res) {
+  try {
+    const requester = req.user; 
+    const userData = req.body;
 
-      // LIBRARIAN cannot create ADMIN or LIBRARIAN
-      if (requester.role === "LIBRARIAN") {
-        if (userData.role && userData.role !== "MEMBER") {
-          return res.status(403).json({
-            message: "Librarian cannot create ADMIN or LIBRARIAN accounts"
-          });
-        }
-        userData.role = "MEMBER"; // force MEMBER role
+    userData.createdBy = requester.id;
+
+    if (requester.role === "LIBRARIAN") {
+      if (userData.role && userData.role !== "MEMBER") {
+        return res.status(403).json({
+          message: "Librarian cannot create ADMIN or LIBRARIAN accounts"
+        });
       }
-
-      const user = await userService.create(userData);
-      res.status(201).json(user);
-
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      userData.role = "MEMBER"; // force le rôle
     }
+
+    if (requester.role === "MEMBER") {
+      return res.status(403).json({
+        message: "Members cannot create users"
+      });
+    }
+    const user = await userService.create(userData);
+    res.status(201).json(user);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
+}
+
 
   // UPDATE USER
   async updateUser(req, res) {
