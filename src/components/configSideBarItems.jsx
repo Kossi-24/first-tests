@@ -7,7 +7,7 @@ import {
 export const sidebarItems = {
   ADMIN: [
     { icon: <LayoutDashboard size={20} />, text: "Dashboard", path: "/private/dashboard" },
-    { icon: <Book size={20} />, text: "Books", path: "/private/books" },
+    { icon: <Book size={20} />, text: "Books Management", path: "/private/books" },
     { icon: <User size={20} />, text: "Users", path: "/private/users" },
     { icon: <Package size={20} />, text: "Orders", path: "/private/orders" },
     { icon: <BarChart size={20} />, text: "Analytics", path: "/private/analytics" },
