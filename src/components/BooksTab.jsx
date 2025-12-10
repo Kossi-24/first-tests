@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Table,
@@ -9,48 +9,68 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { MoreHorizontal } from "lucide-react"
-
-const books = [
-  {
-    id: "#B-10",
-    title: "Ancestor Trouble",
-    author: "Maud Newton",
-    available: "30",
-    highlight: true,
-  },
-  {
-    id: "#B-35",
-    title: "Life Is Everywhere",
-    author: "Lucy Ives",
-    available: "23",
-  },
-  {
-    id: "#G-51",
-    title: "Stroller",
-    author: "Amanda Parrish",
-    available: "90",
-  },
-  {
-    id: "#R-77",
-    title: "The Secret Syllabus",
-    author: "Terence C. Burnhum",
-    available: "06",
-  },
-]
+import { getBooks, getCategories, AdminDeleteBook } from "@/services/BookService"
+import AddBookModal from "@/components/AddBookForm"
 
 export function BooksTab() {
+  const [books, setBooks] = useState([])
+  const [categories, setCategories] = useState([])
+
+  useEffect(() => {
+    fetchBooks()
+    fetchCategories()
+  }, [])
+
+  const fetchBooks = async () => {
+    try {
+      const data = await getBooks()
+      setBooks(data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      const data = await getCategories()
+      setCategories(data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleBookAdded = () => {
+    fetchBooks()
+  }
+
+  const handleDelete = (id) => {
+    const confirm = window.confirm("Voulez-vous supprimer ce livre ?")
+    if (confirm) {
+      AdminDeleteBook(id)
+        .then(() => {
+          setBooks(prev => prev.filter(b => b.id !== id))
+        })
+        .catch(err => console.log(err))
+    }
+  }
   return (
     <div className="w-full rounded-2xl border border-slate-100 bg-white p-6 text-gray-900 shadow-lg dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">Books List</h2>
         </div>
-        <Button
-          variant="outline"
-          className="rounded-sm border-slate-200 px-6 text-sm font-semibold text-gray-700 shadow-none hover:bg-slate-50 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800"
-        >
-          Add New Book
-        </Button>
+        <AddBookModal
+          categories={categories}
+          onBookAdded={handleBookAdded}
+          trigger={
+            <Button
+              variant="outline"
+              className="rounded-sm border-slate-200 px-6 text-sm font-semibold text-gray-700 shadow-none hover:bg-slate-50 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800"
+            >
+              + Add New Book
+            </Button>
+          }
+        />
       </div>
 
       <div className="mt-6">
@@ -80,24 +100,17 @@ export function BooksTab() {
                   <TableCell className="text-gray-900 dark:text-slate-100">{book.title}</TableCell>
                   <TableCell className="text-gray-600 dark:text-slate-300">
                     <div className="flex items-center gap-2">
-                      {book.highlight ? (
-                        <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
-                      ) : null}
-                      <span>{book.author}</span>
+                      <span>{book.author?.name || 'Unknown'}</span>
                     </div>
                   </TableCell>
                   <TableCell className="font-semibold text-gray-900 dark:text-slate-100">
-                    {book.available}
+                    {book.availableCopies || 0}
                   </TableCell>
                   <TableCell className="pr-6 text-right">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-gray-400 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-100"
-                      aria-label={`Actions pour ${book.title}`}
-                    >
-                      <MoreHorizontal className="h-5 w-5" />
-                    </Button>
+                    <div className="flex flex-row gap-4">
+                      <Button className="bg-sky-900 px-3 hover:bg-sky-950">Update</Button>
+                      <Button onClick={() => handleDelete(book.id)} className="bg-red-500 hover:bg-red-600 px-4">Delete</Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

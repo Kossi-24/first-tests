@@ -4,6 +4,7 @@ import api from './api';
 export const registerUser = async (payload) => {
   try {
     const response = await api.post('/auth/register', payload);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || "Erreur d'inscription");
