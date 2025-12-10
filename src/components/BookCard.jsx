@@ -42,7 +42,7 @@ export function BookCard({ book = {}, onEdit, onDelete, onPreview, onToggleStatu
     <>
       <Card
         className={cn(
-          " w-60 overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group",
+          " w-85 overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group",
           isActionLoading && "opacity-50 pointer-events-none",
           className
         )}
@@ -135,20 +135,18 @@ export function BookCard({ book = {}, onEdit, onDelete, onPreview, onToggleStatu
         
         <CardFooter className="p-4 pt-0 flex gap-2">
           <Button
-            variant="outline"
             size="sm"
             onClick={() => onEdit(book)}
-            className="flex-1 gap-2"
+            className="flex-1 gap-2 bg-neutral-700"
             disabled={isActionLoading}
           >
             <Edit className="w-4 h-4" />
             Modifier
           </Button>
           <Button
-            variant="destructive"
             size="sm"
             onClick={handleBookDelete}
-            className="flex-1 gap-2"
+            className="flex-1 gap-2 bg-pink-600 hover:bg-pink-700"
             disabled={isActionLoading}
           >
             <Trash2 className="w-4 h-4" />
