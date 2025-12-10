@@ -28,8 +28,6 @@ const User = sequelize.define('User', {
     type: DataTypes.ENUM('ADMIN', 'LIBRARIAN', 'MEMBER'),
     defaultValue: 'MEMBER',
   },
-
-  // 🔥 NOUVEAU : utilisateur qui a créé ce compte
   createdBy: {
     type: DataTypes.INTEGER,
     allowNull: true, // un admin racine peut être null
@@ -47,8 +45,6 @@ const User = sequelize.define('User', {
   tableName: 'Users',
   timestamps: false,
 });
-
-// 🔥 Association pour que Sequelize comprenne la relation
 User.belongsTo(User, {
   as: 'creator',
   foreignKey: 'createdBy',
