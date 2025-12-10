@@ -126,8 +126,8 @@ export function UsersTab() {
                 </TableCell>
                 <TableCell className="text-right ">
               <div className="flex flex-row gap-4">
-                    <Button className="bg-sky-900 px-3 hover:bg-sky-950">Update</Button>
-                   <Button onClick={e =>handleDelete(user.id)} className="bg-red-500 hover:bg-red-600 px-4">Delete</Button>
+                    <Button className="bg-neutral-700 px-3 hover:bg-neutral-950">Update</Button>
+                   <Button onClick={e =>handleDelete(user.id)} className="bg-pink-700 hover:bg-pink-600 px-4">Delete</Button>
               </div>
                 </TableCell>
               </TableRow>

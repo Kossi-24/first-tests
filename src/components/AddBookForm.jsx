@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import api from "@/services/api";
+import { createBook } from "@/services/bookService";
 
 export default function AddBookModal({ categories, onBookAdded }) {
   const [open, setOpen] = useState(false);
@@ -20,6 +20,18 @@ export default function AddBookModal({ categories, onBookAdded }) {
     imageUrl: "",
   });
 
+  const resetForm = () => {
+    setForm({
+      title: "",
+      description: "",
+      publishedYear: "",
+      isbn: "",
+      categoryId: "",
+      imageUrl: "",
+    });
+    setPreview(null);
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -28,14 +40,27 @@ export default function AddBookModal({ categories, onBookAdded }) {
     reader.onload = () => {
       const base64 = reader.result;
       setPreview(base64);
-      setForm({ ...form, imageUrl: base64 });
+      setForm((prev) => ({ ...prev, imageUrl: base64 }));
     };
     reader.readAsDataURL(file);
   };
 
   const handleSubmit = async () => {
+    if (!form.title || !form.publishedYear || !form.isbn) {
+      alert("Title, Published Year and ISBN are required.");
+      return;
+    }
+
     try {
-      await api.post("/books", form);
+      const payload = {
+        ...form,
+        publishedYear: Number(form.publishedYear),
+        categoryId: form.categoryId ? Number(form.categoryId) : null,
+      };
+
+      await createBook(payload);
+
+      resetForm();
       setOpen(false);
       onBookAdded?.();
     } catch (err) {
@@ -100,11 +125,15 @@ export default function AddBookModal({ categories, onBookAdded }) {
             <Input type="file" accept="image/*" onChange={handleImageChange} />
 
             {preview && (
-              <img src={preview} className="w-32 h-32 object-cover rounded-md border" />
+              <img
+                src={preview}
+                className="w-32 h-32 object-cover rounded-md border"
+                alt="Preview"
+              />
             )}
           </div>
 
-          <Button onClick={handleSubmit} className="bg-green-600 text-white">
+          <Button onClick={handleSubmit} className="bg-emerald-800 text-white">
             Save Book
           </Button>
         </div>

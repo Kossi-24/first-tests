@@ -1,10 +1,9 @@
 import api from "./api";
 
 // Admin create book
-export const createBook = async(playload) =>{
+export const createBook = async(payload) =>{
     try {
-        const response = await api.post('/books', playload);
-        console.log
+        const response = await api.post('/books', payload);
     } catch (error) {
         throw new Error(error.response?.data?.message || "Erreur d'ajout");
     }
