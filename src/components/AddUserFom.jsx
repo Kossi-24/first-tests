@@ -24,15 +24,22 @@ export default function AddUserModal({ trigger }) {
   })
 
   const onSubmit = async (data) => {
+    // Garantit que l'ID du créateur est bien envoyé, quel que soit le nom de la clé (_id ou id)
+    const creatorId = user?._id || user?.id;
+
+    if (!creatorId) {
+      console.error("Impossible de déterminer l'ID du créateur pour createdBy");
+      return;
+    }
+
     try {
       const res = await registerUser({
-      nom: data.nom,
-      email: data.email,
-      password: data.password,
-      role: data.role,
-      createdBy: user?.id   // <= ICI LE PLUS IMPORTANT
-    });
-
+        nom: data.nom,
+        email: data.email,
+        password: data.password,
+        role: data.role,
+        createdBy: creatorId,
+      });
 
       console.log("Utilisateur créé :", res)
 
