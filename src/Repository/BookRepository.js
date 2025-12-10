@@ -12,7 +12,11 @@ class BookRepository {
 
   async findAll(options = {}) {
     try {
-      return await Book.findAll(options);
+      const defaultOptions = {
+        include: ['category', 'edition', 'authors', 'copies', 'reservations'],
+        ...options
+      };
+      return await Book.findAll(defaultOptions);
     } catch (error) {
       throw new Error(`Database error fetching books: ${error.message}`);
     }

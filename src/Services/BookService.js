@@ -11,9 +11,7 @@ class BookService {
 
   async findAll() {
     try {
-      const books = await Book.findAll({
-        include: ['category', 'edition', 'authors', 'copies', 'reservations'],
-      });
+      const books = await bookRepository.findAll();
       return books;
     } catch (error) {
       throw new Error(`Error fetching books: ${error.message}`);
@@ -22,7 +20,7 @@ class BookService {
 
   async findById(id) {
     try {
-      const book = await Book.findByPk(id, {
+      const book = await bookRepository.findByPk(id, {
         include: ['category', 'edition', 'authors', 'copies', 'reservations'],
       });
       return book;
@@ -33,11 +31,10 @@ class BookService {
 
   async update(id, bookData) {
     try {
-      const [updated] = await Book.update(bookData, { where: { id } });
-      if (updated) {
-        const updatedBook = await Book.findByPk(id, {
-          include: ['category', 'edition', 'authors', 'copies', 'reservations'],
-        });
+      const updatedBook = await bookRepository.update(id, bookData, {
+        include: ['category', 'edition', 'authors', 'copies', 'reservations'],
+      });
+      if (updatedBook) {
         return updatedBook;
       }
       throw new Error('Book not found');
